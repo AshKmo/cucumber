@@ -214,7 +214,7 @@ void setup() {
 	modules.rtc.setDate(timeDateStringDigits(__DATE__, 4));
 	modules.rtc.setHour(timeDateStringDigits(__TIME__, 0));
 	modules.rtc.setMinute(timeDateStringDigits(__TIME__, 3));
-	modules.rtc.setSecond(timeDateStringDigits(__TIME__, 6) + 5);
+	modules.rtc.setSecond(timeDateStringDigits(__TIME__, 6) + 10);
 
 	// try to initialise the oled display
 	if (!modules.oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
