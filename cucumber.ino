@@ -193,6 +193,8 @@ const struct {
 	Adafruit_SSD1306 oled = Adafruit_SSD1306(hardwareConfig.oled.width, hardwareConfig.oled.height, &Wire, hardwareConfig.oled.resetPin);
 
 	dht tempSensor;
+
+	DS3231 rtc;
 } modules;
 
 
@@ -206,6 +208,13 @@ void setup() {
 
 	// start i2c
 	Wire.begin();
+
+	modules.rtc.setYear(timeDateStringDigits(__DATE__, 9));
+	modules.rtc.setMonth(dateStringMonth());
+	modules.rtc.setDate(timeDateStringDigits(__DATE__, 4));
+	modules.rtc.setHour(timeDateStringDigits(__TIME__, 0));
+	modules.rtc.setMinute(timeDateStringDigits(__TIME__, 3));
+	modules.rtc.setSecond(timeDateStringDigits(__TIME__, 6) + 5);
 
 	// try to initialise the oled display
 	if (!modules.oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -895,4 +904,22 @@ unsigned int calcWater(int day, int line) {
 
 unsigned int waterToMins(unsigned int water) {
 	return water / 60 + (water % 60 ? 1 : 0);
+}
+
+constexpr byte timeDateStringDigits(const char* timeDate, int i) {
+	return timeDate[i + 1] - 48 + (timeDate[i] - 48) * 10;
+}
+
+constexpr byte dateStringMonth() {
+	return
+		__DATE__[2] == 'n' ? (__DATE__[1] == 'a' ? 1 : 6) :
+		__DATE__[2] == 'b' ? 2 :
+		__DATE__[2] == 'r' ? (__DATE__[1] == 'a' ? 3 : 4) :
+		__DATE__[2] == 'y' ? 5 :
+		__DATE__[2] == 'l' ? 7 :
+		__DATE__[2] == 'g' ? 8 :
+		__DATE__[2] == 'p' ? 9 :
+		__DATE__[2] == 't' ? 10 :
+		__DATE__[2] == 'v' ? 11 :
+		12;
 }
