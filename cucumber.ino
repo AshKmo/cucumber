@@ -39,7 +39,12 @@ const struct {
 	} fertilising;
 
 	const struct {
-		int joystickSensitivity = 300;
+		int joystickXLeft = 100;
+		int joystickXRight = 800;
+
+		int joystickYDown = 150;
+		int joystickYUp = 800;
+	
 		int buttonSensitivity = 100;
 	} menuJoystick;
 
@@ -500,8 +505,8 @@ void loop() {
 
 
 	const struct {
-		const int8_t x = JSAxis(analogRead(pins.menuJoystick.x));
-		const int8_t y = JSAxis(analogRead(pins.menuJoystick.y));
+		const int8_t x = JSAxis(analogRead(pins.menuJoystick.x), settings.menuJoystick.joystickXLeft, settings.menuJoystick.joystickXRight);
+		const int8_t y = JSAxis(analogRead(pins.menuJoystick.y), settings.menuJoystick.joystickYDown, settings.menuJoystick.joystickYUp);
 		const bool button = analogRead(pins.menuJoystick.button) < settings.menuJoystick.buttonSensitivity;
 	} menuJoystick;
 
@@ -830,13 +835,15 @@ void loop() {
 
 
 // function for reading joystick movements in a discrete manner
-int8_t JSAxis(int x) {
-	if (x < settings.menuJoystick.joystickSensitivity) {
+int8_t JSAxis(int x, int lower, int upper) {
+	if (x < lower) {
 		return -1;
 	}
-	if (x > 1023 - settings.menuJoystick.joystickSensitivity) {
+
+	if (x > upper) {
 		return 1;
 	}
+
 	return 0;
 }
 
