@@ -214,11 +214,10 @@ void setup() {
 	// start i2c
 	Wire.begin();
 
-	
+
 
 	// make the first state.time value equal to the current actual time
-	state.time = DateTime(__DATE__, __TIME__);
-	modules.rtc.setEpoch(state.time.getUnixTime());
+	state.time = RTClib::now();
 
 
 
