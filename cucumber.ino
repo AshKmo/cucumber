@@ -214,7 +214,13 @@ void setup() {
 	// start i2c
 	Wire.begin();
 
-	modules.rtc.setEpoch(DateTime(__DATE__, __TIME__).getUnixTime());
+	
+
+	// make the first state.time value equal to the current actual time
+	state.time = DateTime(__DATE__, __TIME__);
+	modules.rtc.setEpoch(state.time.getUnixTime());
+
+
 
 	// try to initialise the oled display
 	if (!modules.oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -276,9 +282,6 @@ void setup() {
 	pinMode(pins.menuJoystick.button, INPUT);
 
 
-
-	// make the first state.time value equal to the current actual time
-	state.time = RTClib::now();
 
 	// make the current day in history a valid day
 	state.previousDays[2].day = state.time.getWeekDay();
